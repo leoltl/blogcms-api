@@ -26,7 +26,6 @@ const authController = require('./controllers/auth.controller')(User),
 const authRouter = require('./routes/auth')(authController, passport),
       postRouter = require('./routes/post')(postController, passport);
 
-app.use('/api', indexRouter);
 app.use('/api', authRouter);
 app.use('/api/post', postRouter);
 
