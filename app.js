@@ -29,7 +29,7 @@ const indexRouter = require('./routes/index'),
 
 app.use('/api', indexRouter);
 app.use('/api', authRouter);
-app.use('/api/post', passport.authenticate('jwt', { session: false }), postRouter);
+app.use('/api/post', postRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
