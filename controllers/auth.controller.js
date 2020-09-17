@@ -3,7 +3,6 @@ const { validPassword, signJWToken } = require('../bin/utils');
 
 module.exports = function makeController(User) {
   async function sign_in(req, res, next) {
-    console.log(req.body)
     try {
       const user = await User.findOne({ username: req.body.username });
       if (!user || !validPassword(req.body.password, user.password_hash, user.salt)) {

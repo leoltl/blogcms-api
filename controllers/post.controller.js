@@ -1,7 +1,11 @@
 module.exports = function makeController(Post) {
   async function list(req, res, next) {
     try {
-      const posts = await Post.find({});
+      const query = { published: true }
+      if (req.user) {
+        query.published = false
+      }
+      const posts = await Post.find(query);
       res.json(posts);
     } catch (e) {
       next(e);
@@ -10,7 +14,11 @@ module.exports = function makeController(Post) {
 
   async function detail(req, res, next) {
     try {
-      const post = await Post.find({ _id: req.params.id });
+      const query = { _id: req.params.id, published: true }
+      if (req.user) {
+        query.published = false
+      }
+      const post = await Post.findOne(query);
       res.json(post);
     } catch (e) {
       next(e);

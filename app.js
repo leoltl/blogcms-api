@@ -2,7 +2,6 @@ require('dotenv').config();
 const express = require('express'),
       path = require('path'),
       logger = require('morgan'),
-      passport = require('passport'),
       createError = require('http-errors');
 
 const dbConnection = require('./config/db')(process.env.MONGO_URI);
@@ -15,10 +14,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // configure passport
 const User = require('./models/user.model')(dbConnection);
-require('./config/passport')(passport, User.findOne.bind(User));
+const passport = require('./config/passport')(User.findOne.bind(User));
 // initialize passport on every request
 app.use(passport.initialize());
-
 
 const Post = require('./models/post.model')(dbConnection);
 
@@ -31,7 +29,7 @@ const indexRouter = require('./routes/index'),
 
 app.use('/api', indexRouter);
 app.use('/api', authRouter);
-app.use('/api/post', postRouter);
+app.use('/api/post', passport.authenticate('jwt', { session: false }), postRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
