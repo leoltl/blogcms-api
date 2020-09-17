@@ -1,3 +1,5 @@
+const { makeDataObjWithValidProps } = require('../bin/utils');
+
 module.exports = function makeController(Post) {
   async function list(req, res, next) {
     try {
@@ -27,9 +29,9 @@ module.exports = function makeController(Post) {
 
   async function create(req, res, next) {
     try {
+      const post = makeDataObjWithValidProps(req.body, Post.schema.tree);
       const newPost = new Post({
-        title: req.body.title,
-        body: req.body.body,
+        ...post,
         author: req.user._id,
       });
       await newPost.save();
@@ -42,10 +44,11 @@ module.exports = function makeController(Post) {
   async function update(req, res, next) {
     try {
       const { id } = req.params;
+      const updates = makeDataObjWithValidProps(req.body, Post.schema.tree);
       const updatePost = {
-        title: req.body.title,
-        body: req.body.body,
+        ...updates,
         author: req.user._id,
+        updated_at: Date.now(),
       };
       const post = await Post.findOneAndUpdate({ _id: id }, updatePost, { new: true });
       res.json(post);

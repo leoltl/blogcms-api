@@ -53,3 +53,14 @@ exports.seedUser = async function createUser(username, password) {
   const [password_hash, salt] = exports.genPassword(password)
   await new User({ username, password_hash, salt}).save()
 }
+
+
+exports.makeDataObjWithValidProps = function makeDataObjWithValidProps(userInputs, schema) {
+  let result = {}
+  for (key in userInputs) {
+    if (key in schema) {
+      result[key] = userInputs[key];
+    }
+  }
+  return result;
+}
