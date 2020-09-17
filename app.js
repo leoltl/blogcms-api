@@ -23,8 +23,7 @@ const Post = require('./models/post.model')(dbConnection);
 const authController = require('./controllers/auth.controller')(User),
       postController = require('./controllers/post.controller')(Post);
 
-const indexRouter = require('./routes/index'),
-      authRouter = require('./routes/auth')(authController, passport),
+const authRouter = require('./routes/auth')(authController, passport),
       postRouter = require('./routes/post')(postController, passport);
 
 app.use('/api', indexRouter);
