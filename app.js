@@ -2,12 +2,14 @@ require('dotenv').config();
 const express = require('express'),
       path = require('path'),
       logger = require('morgan'),
-      createError = require('http-errors');
+      createError = require('http-errors'),
+      cors = require('cors');
 
 const dbConnection = require('./config/db')(process.env.MONGO_URI);
 
 const app = express();
 
+app.use(cors({ origin: ['http://localhost:3001']}))
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
@@ -27,7 +29,7 @@ const authRouter = require('./routes/auth')(authController, passport),
       postRouter = require('./routes/post')(postController, passport);
 
 app.use('/api', authRouter);
-app.use('/api/post', postRouter);
+app.use('/api/posts', postRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
