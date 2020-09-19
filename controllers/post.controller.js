@@ -5,9 +5,9 @@ module.exports = function makeController(Post) {
     try {
       const query = { published: true }
       if (req.user) {
-        query.published = false
+        delete query.published
       }
-      const posts = await Post.find(query);
+      const posts = await Post.find(query).populate('author', 'username');
       res.json(posts);
     } catch (e) {
       next(e);
@@ -18,9 +18,9 @@ module.exports = function makeController(Post) {
     try {
       const query = { _id: req.params.id, published: true }
       if (req.user) {
-        query.published = false
+        delete query.published
       }
-      const post = await Post.findOne(query);
+      const post = await Post.findOne(query).populate('author', 'username');
       res.json(post);
     } catch (e) {
       next(e);
@@ -35,6 +35,7 @@ module.exports = function makeController(Post) {
         author: req.user._id,
       });
       await newPost.save();
+      await newPost.populate('author', 'username').execPopulate()
       res.json(newPost);
     } catch (e) {
       next(e);
@@ -50,7 +51,7 @@ module.exports = function makeController(Post) {
         author: req.user._id,
         updated_at: Date.now(),
       };
-      const post = await Post.findOneAndUpdate({ _id: id }, updatePost, { new: true });
+      const post = await Post.findOneAndUpdate({ _id: id }, updatePost, { new: true }).populate('author', 'username');
       res.json(post);
     } catch (e) {
       next(e);
