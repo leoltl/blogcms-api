@@ -9,7 +9,7 @@ const dbConnection = require('./config/db')(process.env.MONGO_URI);
 
 const app = express();
 
-app.use(cors({ origin: ['http://localhost:3001', 'http://localhost:8080']}))
+app.use(cors(JSON.parse(process.env.ALLOW_ORIGIN) || { origin: ['http://localhost:3001', 'http://localhost:8080']}))
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
