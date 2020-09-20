@@ -3,6 +3,15 @@ const { makeDataObjWithValidProps } = require('../bin/utils');
 
 module.exports = function makeController(Post, Comment) {
 
+  async function list(req, res, next) {
+    try {
+      const comments = await Comment.find({}, null, { sort: {created_at: 'desc'} }).populate('post title');
+      res.json(comments);
+    } catch (e) {
+      next(e);
+    }
+  }
+
   async function create(req, res, next) {
     try {
       const postId = req.params.id;
@@ -27,7 +36,7 @@ module.exports = function makeController(Post, Comment) {
         ...updates,
         updated_at: Date.now(),
       };
-      const comment = await Comment.findOneAndUpdate({ _id: id }, updateComments, { new: true })
+      const comment = await Comment.findOneAndUpdate({ _id: id }, updateComments, { new: true }).populate('post title')
       res.json(comment);
     } catch (e) {
       next(e);
@@ -36,6 +45,7 @@ module.exports = function makeController(Post, Comment) {
 
   return {
     create,
-    update
+    update,
+    list
   }
 }

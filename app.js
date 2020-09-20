@@ -28,10 +28,12 @@ const authController = require('./controllers/auth.controller')(User),
       commentController = require('./controllers/comment.controller')(Post, Comment);
 
 const authRouter = require('./routes/auth')(authController, passport),
-      postRouter = require('./routes/post')(postController, commentController, passport);
+      postRouter = require('./routes/post')(postController, commentController, passport),
+      commentRouter = require('./routes/comment')(commentController);
 
 app.use('/api', authRouter);
 app.use('/api/posts', postRouter);
+app.use('/api/comments', passport.authenticate('jwt', { session: false }), commentRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
