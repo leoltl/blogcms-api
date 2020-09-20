@@ -1,11 +1,11 @@
 # blogcms-api
 
-Headless blog CMS has an express server (api) that serves content, a Vue app (client) for rendering content and a React app (admin) for managing the content in the server (ie blog posts and comments). The system is communicating using REST API calls over HTTP.
-
 Cms-api is an app built with Express which serves content for blogcms-admin and blogcms-client and accept user data (ie new blog post/comments) and persist in database. It implements REST API for external application (CORS white listed domain) to interact with it.
 
 
 It is part of the headless cms system.
+
+Headless blog CMS has an express server (api) that serves content, a Vue app (client) for rendering content and a React app (admin) for managing the content in the server (ie blog posts and comments). The system is communicating using REST API calls over HTTP.
 
 View **CMS-client** [here](https://github.com/leoltl/blogcms-client)
 
