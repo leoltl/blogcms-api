@@ -1,4 +1,4 @@
-const { Schema } = require('mongoose');
+const { Schema, SchemaTypes } = require('mongoose');
 
 const PostSchema = new Schema({
   title: {
@@ -25,7 +25,11 @@ const PostSchema = new Schema({
   published: {
     type: Boolean,
     default: false,
-  }
+  },
+  comments: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Comment'
+  }],
 });
 
 module.exports = function makeModel(connection) {

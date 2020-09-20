@@ -9,7 +9,7 @@ const dbConnection = require('./config/db')(process.env.MONGO_URI);
 
 const app = express();
 
-app.use(cors({ origin: ['http://localhost:3001']}))
+app.use(cors({ origin: ['http://localhost:3001', 'http://localhost:8080']}))
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
@@ -20,13 +20,15 @@ const passport = require('./config/passport')(User.findOne.bind(User));
 // initialize passport on every request
 app.use(passport.initialize());
 
-const Post = require('./models/post.model')(dbConnection);
+const Post = require('./models/post.model')(dbConnection),
+      Comment = require('./models/comment.model')(dbConnection);
 
 const authController = require('./controllers/auth.controller')(User),
-      postController = require('./controllers/post.controller')(Post);
+      postController = require('./controllers/post.controller')(Post),
+      commentController = require('./controllers/comment.controller')(Post, Comment);
 
 const authRouter = require('./routes/auth')(authController, passport),
-      postRouter = require('./routes/post')(postController, passport);
+      postRouter = require('./routes/post')(postController, commentController, passport);
 
 app.use('/api', authRouter);
 app.use('/api/posts', postRouter);
